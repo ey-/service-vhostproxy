@@ -40,7 +40,7 @@
 			server_name {{ $host }};
 		{{ end }}
 
-		ssl_certificate           {{ .Cert }}
+		ssl_certificate           {{ .Cert }};
     ssl_certificate_key       {{ .CertKey }};
 
 		ssl on;
