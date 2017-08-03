@@ -100,7 +100,6 @@
 		    {{ $cert := "/etc/nginx/server.crt" }}
 		    {{ $cert_key := "/etc/nginx/server.key" }}
 			{{ template "https" (dict "Hosts" $hosts "Upstream" $upstream "Cert" $cert "CertKey" $cert_key) }}
-		    }
 		{{ end }}
 
 	{{ end }}
