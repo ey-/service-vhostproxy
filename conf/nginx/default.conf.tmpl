@@ -31,6 +31,17 @@
 	}
 {{ end }}
 
+{{ define "http_redirect" }}
+	# HTTP Redirect to HTTPS
+	server {
+		listen 80;
+		{{ range $hosts := split .Hosts "," }}
+			server_name {{ $hosts }};
+		{{ end }}
+    return 307 https://$host$request_uri;
+	}
+{{ end }}
+
 {{ define "https" }}
 	# HTTPS
 	server {
@@ -89,7 +100,12 @@
 		{{ end }}
 		}
 
-		{{ template "http" (dict "Hosts" $hosts "Upstream" $upstream) }}
+		{{ $pot_redirect := (print "/projects/" $project "/certs/https_only") }}
+    {{ if (exists $pot_redirect) }}
+			{{ template "http_redirect" (dict "Hosts" $hosts "Upstream" $upstream) }}
+		{{ else }}
+			{{ template "http" (dict "Hosts" $hosts "Upstream" $upstream) }}
+		{{ end }}
 		{{ $pot_key := (print "/projects/" $project "/certs/server.key") }}
 		{{ $pot_crt := (print "/projects/" $project "/certs/server.crt") }}
 		{{ if (and (exists $pot_crt) (exists $pot_key)) }}
